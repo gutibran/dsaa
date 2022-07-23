@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <limits>
 
 struct Node {
     size_t value;
@@ -26,156 +25,111 @@ struct BinaryTree {
     // destructor
     ~BinaryTree() {}
 
-    // node, left, right
-    void recursive_pre_order(Node* node) {
+    // insert a new node in to the tree
+    bool insert(Node* node, size_t new_node_value) {
         // base case
-        if (!node) {
-            return;
-        }
-        
-        // print out the current node's value
-        std::cout << node->value << std::endl;
-
-        // traverse down the left sub tree
-        recursive_pre_order(node->left);
-
-        // traverse down the right sub tree
-        recursive_in_order(node->right);
-    }
-
-    void recursive_pre_order_insertion(Node* node, size_t new_node_value) {
-        // base case
-        if (!this->root) {
-            // allocate memory in the heap
+        if (!node && !this->root) {
+            // allocate memory in the heap for the new node
             Node* new_node = new Node { new_node_value };
 
             // set the root to the new node
             this->root = new_node;
 
-            // break out of the recursive call
-            return;
-        } else if (!node->left) {
-            // allocate memory in the heap
-            Node* new_node = new Node { new_node_value };
-
-            // set the root to the new node
-            node->left = new_node;
-
-            // break out of the recursive call
-            return;
-        } else if (!node->right) {
-            // allocate memory in the heap
-            Node* new_node = new Node { new_node_value };
-
-            // set the root to the new node
-            node->right = new_node;
-
-            // break out of the recursive call
-            return;
+            // return true to signify that the operation succeeded
+            return true;
         }
 
-        recursive_pre_order_insertion(node->left, new_node_value);
-        recursive_pre_order_insertion(node->right, new_node_value);
-
-
-    }
-
-    void iterative_pre_order(Node* node) {
-        return;
-    }
-
-    void iterative_pre_order_insertion(Node* node, size_t new_node_value) {
-        return;
-    }
-
-    // left, node, right
-    void recursive_in_order(Node* node) {
-        // base case
-        if (!node) {
-            return;
-        }
-
-        // traverse down the left sub tree
-        recursive_in_order(node->left);
-
-        // print out the value of the current node
-        std::cout << node->value << std::endl;
-
-        // traverse down the right sub tree
-        recursive_in_order(node->right);
-    }
-
-    void iterative_in_order(Node* node) {
-        return;
-    }
-
-    void iterative_in_order_insertion(Node* node) {
-        return;
-    }
-
-    void recursive_in_order_insertion(Node* node, size_t new_node_value) {
-        // check if the root is null
-        if (!this->root) {
-            // create a new node object in the heap
-            Node* new_node = new Node { new_node_value };
-
-            // set the root to the new node
-            this->root = new_node;
-
-            // break out of the recursive function call
-            return;
-        } else if (!node) {
-            return;
-        }
-
-        // traverse down the left sub tree
-        recursive_in_order_insertion(node->left, new_node_value);
-
-
-        // check if the left or right is null which we returned from
+        // check if the left child is null for the current node
         if (!node->left) {
-            // create a new node object in the heap
+            // allocate memory in the heap for the new node
             Node* new_node = new Node { new_node_value };
 
-            // set the left child to the new node
+            // set the root to the new node
             node->left = new_node;
 
-            // break out of the recursive function call
-            return;
+            // return true to signify that the operation succeeded
+            return true;
         } else if (!node->right) {
-            // create a new node object in the heap
+            // allocate memory in the heap for the new node
             Node* new_node = new Node { new_node_value };
 
-            // set the right child to the new node
+            // set the root to the new node
             node->right = new_node;
 
-            // break out of the recursive function call
-            return;
-        }    
+            // return true to signify that the operation succeeded
+            return true;
+        } 
 
-        // traverse down the right sub tree
-        recursive_in_order_insertion(node->right, new_node_value);
+        // traverse down the left and right sub-trees
+        return insert(node->left, new_node_value);
+        return insert(node->right, new_node_value);
+    }
+
+
+    // return the values of the nodes in pre-order
+    void recursive_pre_order(Node* node) {
+        if (node) {
+            // print out the value of the current node
+            std::cout << node->value << std::endl;
+
+            // traverse down the left and right sub-trees
+            recursive_pre_order(node->left);
+            recursive_pre_order(node->right);
+        }
+        return;
+    }
+
+    void recursive_in_order(Node* node) {
+        // create a static vector object
+        if (node) {
+            // traverse down the left sub-tree
+            recursive_in_order(node->left);
+
+            // print out the value of the current node
+            std::cout << node->value << std::endl;
+
+            // traverse down the right sub-tree
+            recursive_in_order(node->right);
+        }
+        return;
+    }
+
+    void recursive_post_order(Node* node) {
+        // base case
+        if (node) {
+            // traverse down the left sub-tree
+            recursive_post_order(node->left);
+
+            // traverse down the right sub-tree
+            recursive_post_order(node->right);
+
+            // print out the value of the current node
+            std::cout << node->value << std::endl;
+        }
+        return;
     }
 };
 
 int main() {
     // create an instance of a binary tree
     BinaryTree bt = {};
-    BinaryTree salo = {};
 
-    bt.recursive_in_order_insertion(bt.root, 100);
-    bt.recursive_in_order_insertion(bt.root, 200);
-    bt.recursive_in_order_insertion(bt.root, 300);
+    // insert some nodes
+    bt.insert(bt.root, 1);
+    bt.insert(bt.root, 2);
+    bt.insert(bt.root, 3);
+    bt.insert(bt.root, 4);
+    bt.insert(bt.root, 5);
 
-    salo.recursive_pre_order_insertion(salo.root, 100);
-    salo.recursive_pre_order_insertion(salo.root, 200);
-    salo.recursive_pre_order_insertion(salo.root, 300);
-
-    std::cout << "salo tree" << std::endl;
-    salo.recursive_pre_order(salo.root);
-
-    std::cout << "b tree" << std::endl;
+    // test out the implemented binary tree traversals
+    std::cout << "pre-order" << std::endl;
     bt.recursive_pre_order(bt.root);
+
+    std::cout << "in-order" << std::endl;
+    bt.recursive_in_order(bt.root);
+
+    std::cout << "post-order" << std::endl;
+    bt.recursive_post_order(bt.root);
 
     return 0;
 }
